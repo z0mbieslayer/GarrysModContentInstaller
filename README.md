@@ -5,7 +5,7 @@ Okay so basically what this thing does is it will install any Valve game's conte
 
 It's an exe because I want an icon.
 
-This thing took me months to make (granted I took like a month off out of frustration) and it's still garbage and inefficient, so I hope to fix these things in the future. I kind of just published this now to gte it out there and off of my pc.
+This thing took me months to make (granted I took like a month off out of frustration) and it's still garbage and inefficient, so I hope to fix these things in the future. I kind of just published this now to get it out there and off of my pc.
 ## Features:<br>
 -Installs content from the following games: CS:S, HL2 EP1, HL2 EP2, TF2, L4D2, Portal, and Portal 2.<br>
 -Installs addons from steam workshop directly to addons directory (extracts the addon as well).<br>
