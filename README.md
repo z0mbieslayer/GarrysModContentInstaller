@@ -18,7 +18,6 @@ This thing took me months to make (granted I took like a month off out of frustr
 -Ability to run from a separate drive as your Garry's Mod installation
 ## Dependencies:<br>
 This thing uses some other programs so I thought I should list them here:<br>
-
 -[JQ](https://stedolan.github.io/jq/) for parsing the json from the the steam api.<br>
 -[SteamCMD](https://developer.valvesoftware.com/wiki/SteamCMD) for downloading the addons that require using the ISteamUGC interface.<br>
 -[7Zip](https://www.7-zip.org/) for helping extract the addons.
