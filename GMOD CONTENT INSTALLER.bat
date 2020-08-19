@@ -1,10 +1,10 @@
 @echo off
-title Garry's Mod Content installer 3.1 by z0mbieslayer
+title Garry's Mod Content installer 3.2 by z0mbieslayer
 IF EXIST "updatertmp.exe" (
 	del updatertmp.exe
 )
 echo Searching for updates...
-powershell -Command "Invoke-WebRequest "http://z0mbieslayer.ddns.net/gmodcontent/3.1/tmp.txt -OutFile tmp.txt"
+powershell -Command "Invoke-WebRequest "http://z0mbieslayer.ddns.net/gmodcontent/3.2/tmp.txt -OutFile tmp.txt"
 PING -n 4 127.0.0.1>nul
 setlocal EnableExtensions EnableDelayedExpansion
 for /f "delims=" %%a in (tmp.txt) do (
@@ -29,9 +29,7 @@ IF "%x[1]%"=="update=false" (
 	cls
 )
 :start
-echo *Make sure you are running this installer on the same drive as your Garry's Mod installation. If it isn't run on the 
-echo same drive, the files won't be installed to the correct location.
-echo.
+FOR /F "delims=" %%i IN ('cd') DO set appdirectory=%%i
 echo 1 - Attempt to automatically find Garry's Mod directory
 echo 2 - Specify Garry's Mod directory manually
 echo 3 - Install a custom addon (Steam Workshop) (Beta)
@@ -69,9 +67,6 @@ pause
 cls
 goto start
 :auto
-echo *Make sure you are running this installer on the same drive as your Garry's Mod installation. If it isn't run on the 
-echo same drive, the files won't be installed to the correct location.
-echo.
 echo Trying to find directory automatically...
 set autopath=C:\progra~2\Steam\steamapps\common\GarrysMod
 PING -n 4 127.0.0.1>nul
@@ -89,22 +84,20 @@ IF EXIST "%autopath%" (
 	goto start
 )
 :man
-echo *Make sure you are running this installer on the same drive as your Garry's Mod installation. If it isn't run on the 
-echo same drive, the files won't be installed to the correct location.
-echo.
 set /p dir=Input your Garry's Mod installation directory: 
+cd /d %dir%
 IF EXIST "%dir%/garrysmod/" ( 
-	echo Moving to new directory
+	echo Valid directory located.
 	goto manstart
 ) ELSE (
 	echo Not a valid Garry's Mod directory
+	cd /d %appdirectory%
 	PING -n 4 127.0.0.1>nul
 	cls
 	goto start
 )
 :manstart
 PING -n 4 127.0.0.1>nul
-cd %dir%
 cd garrysmod
 cd addons
 IF EXIST "%dir%\garrysmod\addons\CSSContent" (
@@ -153,9 +146,6 @@ IF EXIST "%autopath%\garrysmod\addons\Portal2Content" (
 echo Moved to new directory
 PING -n 4 127.0.0.1>nul
 cls
-echo *Make sure you are running this installer on the same drive as your Garry's Mod installation. If it isn't run on the 
-echo same drive, the files won't be installed to the correct location.
-echo.
 echo 1 - CSSContent %opt%
 echo 2 - HL2 EP1 %opt2%
 echo 3 - HL2 EP2 %opt3%
@@ -263,9 +253,6 @@ set /p addon=What content would you like to install? (1-7):
 		exit
 	)
 :custom
-echo *Make sure you are running this installer on the same drive as your Garry's Mod installation. If it isn't run on the 
-echo same drive, the files won't be installed to the correct location.
-echo.
 echo 1 - Attempt to automatically find Garry's Mod directory
 echo 2 - Specify Garry's Mod directory manually
 set /p option=What would you like to do? (1-2): 
@@ -278,9 +265,6 @@ IF "%option%"=="2" (
 	goto customman
 )
 :customauto
-echo *Make sure you are running this installer on the same drive as your Garry's Mod installation. If it isn't run on the 
-echo same drive, the files won't be installed to the correct location.
-echo.
 echo Trying to find directory automatically...
 set customautopath=C:\progra~2\Steam\steamapps\common\GarrysMod
 PING -n 4 127.0.0.1>nul
@@ -295,25 +279,21 @@ IF EXIST "%customautopath%" (
 	goto custom
 )
 :customman
-echo *Make sure you are running this installer on the same drive as your Garry's Mod installation. If it isn't run on the 
-echo same drive, the files won't be installed to the correct location.
-echo.
 set /p customdir=Input your Garry's Mod installation directory: 
+cd /d "%customdir%"
 IF EXIST "%customdir%/garrysmod/" ( 
 	echo Moving to new directory
 	PING -n 4 127.0.0.1>nul
 	goto custommanstart
 ) ELSE (
 	echo Not a valid Garry's Mod directory
+	cd /d %appdirectory%
 	PING -n 4 127.0.0.1>nul
 	cls
 	goto custom
 )
 :customautostart
 cls
-echo *Make sure you are running this installer on the same drive as your Garry's Mod installation. If it isn't run on the 
-echo same drive, the files won't be installed to the correct location.
-echo.
 set /p addonid=What is the ID of your addon? (Numbers at end of workshop URL): 
 echo Downloading some temporary files...
 if not exist "temp" mkdir "temp"
@@ -341,9 +321,6 @@ rmdir /S /Q "temp"
 goto customautofinal
 :custommanstart
 cls
-echo *Make sure you are running this installer on the same drive as your Garry's Mod installation. If it isn't run on the 
-echo same drive, the files won't be installed to the correct location.
-echo.
 set /p addonid=What is the ID of your addon? (Numbers at end of workshop URL): 
 echo Downloading some temporary files...
 if not exist "temp" mkdir "temp"
@@ -372,8 +349,11 @@ goto custommanfinal
 :isteamugcauto
 cls
 echo Newer addon detected, using ISteamUGC interface...
+echo Downloading SteamCMD...
 powershell -Command "Invoke-WebRequest https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip -OutFile steamcmd.zip"
+echo Extracting SteamCMD...
 powershell Expand-Archive steamcmd.zip -DestinationPath steamcmd
+echo Downloading workshop addon...
 start /B /wait steamcmd/steamcmd.exe +@ShutdownOnFailedCommand 1 +login anonymous +workshop_download_item 4000 %addonid% +quit >nul 2>&1
 cd steamcmd/steamapps/workshop/content/4000/%addonid%
 dir /b *.gma > tmp
@@ -395,8 +375,11 @@ exit
 :isteamugcman
 cls
 echo Newer addon detected, using ISteamUGC interface...
+echo Downloading SteamCMD...
 powershell -Command "Invoke-WebRequest https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip -OutFile steamcmd.zip"
+echo Extracting SteamCMD...
 powershell Expand-Archive steamcmd.zip -DestinationPath steamcmd
+echo Downloading workshop addon...
 start /B /wait steamcmd/steamcmd.exe +@ShutdownOnFailedCommand 1 +login anonymous +workshop_download_item 4000 %addonid% +quit >nul 2>&1
 cd steamcmd/steamapps/workshop/content/4000/%addonid%
 dir /b *.gma > tmp
